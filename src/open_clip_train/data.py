@@ -214,7 +214,8 @@ def group_by_keys_nothrow(data, keys=base_plus_ext, lcase=True, suffixes=None, h
 def tarfile_to_samples_nothrow(src, handler=log_and_continue):
     # NOTE this is a re-impl of the webdataset impl with group_by_keys that doesn't throw
     streams = url_opener(src, handler=handler)
-    files = tar_file_expander(streams, handler=handler)
+    # https://github.com/mlfoundations/open_clip/issues/935
+    files = tar_file_expander(streams, handler=handler,eof_value=None)
     samples = group_by_keys_nothrow(files, handler=handler)
     return samples
 
