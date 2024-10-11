@@ -192,6 +192,11 @@ def group_by_keys_nothrow(data, keys=base_plus_ext, lcase=True, suffixes=None, h
     current_sample = None
     for filesample in data:
         assert isinstance(filesample, dict)
+        # https://github.com/webdataset/webdataset/issues/384
+        if not isinstance(filesample, dict) or "fname" not in filesample or "data" not in filesample:
+            if handler is not None:
+                handler(f"Skipping malformed filesample: {filesample}")
+            continue 
         fname, value = filesample["fname"], filesample["data"]
         prefix, suffix = keys(fname)
         if prefix is None:
